@@ -1,8 +1,7 @@
 # pylint: disable=C,R
 import datetime as dt
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Float, Date
+from costum_orms import Base, Stock
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.reflection import Inspector
 
