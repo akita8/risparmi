@@ -55,3 +55,4 @@ class Stock(Base):
     exchange_rate = Column(Float)
     owner = Column(String)
     date_of_transaction = Column(Date)
+# commento
