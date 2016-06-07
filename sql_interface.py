@@ -1,11 +1,7 @@
 # pylint: disable=C,R
 import datetime as dt
 from sqlalchemy import create_engine
-<<<<<<< HEAD
 from costum_orms import Stock, Bond, Base
-=======
-from costum_orms import Base, Stock
->>>>>>> cb18d9f047e8a980d26f146ecdbccd64f1b9dd11
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.reflection import Inspector
 

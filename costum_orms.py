@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float, Date
-
-
-
-
 
 Base = declarative_base()
 
@@ -58,7 +53,7 @@ class Stock(Base):
     exchange_rate = Column(Float)
     owner = Column(String)
     date_of_transaction = Column(Date)
-=======
+
 from sqlalchemy import Column, Integer, String, Float, Date
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -87,4 +82,3 @@ class Stock(Base):
     exchange_rate = Column(Float)
     owner = Column(String)
     date_of_transaction = Column(DateTime)
->>>>>>> cb18d9f047e8a980d26f146ecdbccd64f1b9dd11
