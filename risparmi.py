@@ -26,7 +26,6 @@ class Risparmi:
         set_option('expand_frame_repr', False)
         set_option('precision', 4)
 
-
         # crea una nuova cartella con il nome passato a init
         if not path.exists(directory):
             # e il contenuto di asset(template)
@@ -194,8 +193,8 @@ class Risparmi:
 
                 gross_dividend = asset[12]
                 tax = gross_dividend * asset[14]
-
-                if flag and np.isnan(asset[15]) == False:
+#               # cosi è giusto secondo flake
+                if flag and not np.isnan(asset[15]):
                     gross_dividend *= asset[15]
                     tax = gross_dividend * asset[14]
 
