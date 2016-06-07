@@ -5,11 +5,6 @@ Created on Fri Mar 25 15:33:17 2016
 @author: marco
 """
 
-# **disable=C,R** disabilta le convention issues che non sono da ignorare
-# completamente ma non causano gravi problemi e i refractor issues che invece
-# sono una questione da considerare attentamente e affrontare nel futuro
-
-# pylint: disable=C,R,W
 import requests
 import datetime as dt
 import numpy as np
@@ -140,7 +135,6 @@ class Risparmi:
 
     def stock_report_gen(self):
 
-        # pylint: disable=E1101
         def stock_agg_func(*args):
             '''da gestire il caso con conversione in euro per flag'''
 
@@ -321,17 +315,17 @@ class Risparmi:
             commission=asset['commissione']
             tax=asset['tasse']
 
-#acquisto puro
+# acquisto puro
             x=quantity*(price_t/100)
-#rateo maturato all acquisto
+# rateo maturato all acquisto
             y=((coupon*days_to_coupon)/days_between_coupon)*quantity
-#ritenuta sul rateo all acquisto
+# ritenuta sul rateo all acquisto
             z=y*tax
-#disaggio di emissione maturato
+# disaggio di emissione maturato
             k=(((price_r-price_i)*days_from_issue_date)/bond_life)*(quantity/100)
-#ritenuta sul disaggio
+# ritenuta sul disaggio
             h=k*tax
-#formula investimento(gestire il disaggio negativo)
+# formula investimento(gestire il disaggio negativo)
             price_purchase=x+y-z-h+commission
 
             #print('{0} {1} {2} {3} {4}'.format(x, y, z, k, price_purchase))

@@ -5,7 +5,6 @@ from costum_orms import Stock, Bond, Base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.reflection import Inspector
 
-
 class SqlIO:
 
     def __init__(self):
