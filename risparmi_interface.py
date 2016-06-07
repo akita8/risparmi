@@ -95,9 +95,9 @@ class Interface(npyscreen.NPSAppManaged):
         elif form_id==cash_form_id:
             self.addForm(form_id, CashForm)
         elif form_id==stock_report_id:
-            self.addForm(stock_report_id, ReportVisualization)
+            self.addForm(form_id, ReportVisualization)
         elif form_id==temp_id:
-            self.addForm(temp_id, ValorizationVisualization)
+            self.addForm(form_id, ValorizationVisualization)
 
 '''
 USEFUL FUNCTIONS
