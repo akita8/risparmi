@@ -1,4 +1,4 @@
-import npyscreen
+from npyscreen import GridColTitles
 '''
 USEFUL FUNCTIONS
 '''
@@ -32,11 +32,14 @@ def stock_report_cleaned_matrix(values):
         cleaned_list.append(line)
     return cleaned_list
 
+
+
+#da spostare
 '''
 GRID CLASSES
 '''
 
-class ReportGrid(npyscreen.GridColTitles):
+class ReportGrid(GridColTitles):
     default_column_number = 10
 
 '''

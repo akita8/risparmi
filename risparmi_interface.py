@@ -1,29 +1,16 @@
 # pylint: disable=C,R
-import npyscreen
-from risparmi_modules import *
-
-'''
-FORM ID DECLARATION
-'''
-
-buy_stock_form_id='buy_stock'
-sell_stock_form_id='sell_stock'
-dividend_stock_form_id='dividend'
-buy_bond_form_id='buy_bond'
-sell_bond_form_id='sell_bond'
-coupon_bond_form_id='coupon'
-currency_form_id='currency'
-cash_form_id='cash'
-stock_report_id='stock_report'
-temp_id='temp' #temporanea per la valorizzazione, devo farlo meglio!
-
-
+from npyscreen import NPSAppManaged, FormBaseNewWithMenus, notify_confirm
+import risparmi.misc as misc
+from risparmi.config import Config
+from risparmi.core import Risparmi
+import risparmi.ui as ui
+import risparmi.reports as reports
 '''
 MAIN APP
 '''
 
 
-class Interface(npyscreen.NPSAppManaged):
+class Interface(NPSAppManaged):
 
 
 
@@ -37,26 +24,26 @@ class Interface(npyscreen.NPSAppManaged):
         # pylint: disable=W
         self.active_form_id=form_id
 
-        if form_id==buy_stock_form_id:
-            self.addForm(form_id, BuyStockForm)
-        elif form_id==sell_stock_form_id:
-            self.addForm(form_id, SellStockForm)
-        elif form_id==dividend_stock_form_id:
-            self.addForm(form_id, DividendStockForm)
-        elif form_id==buy_bond_form_id:
-            self.addForm(form_id, BuyBondForm)
-        elif form_id==sell_bond_form_id:
-            self.addForm(form_id, SellBondForm)
-        elif form_id==coupon_bond_form_id:
-            self.addForm(form_id, CouponBondForm)
-        elif form_id==currency_form_id:
-            self.addForm(form_id, CurrencyForm)
-        elif form_id==cash_form_id:
-            self.addForm(form_id, CashForm)
-        elif form_id==stock_report_id:
-            self.addForm(form_id, ReportVisualization)
-        elif form_id==temp_id:
-            self.addForm(form_id, ValorizationVisualization)
+        if form_id==Config.buy_stock_form_id:
+            self.addForm(form_id, ui.BuyStockForm)
+        elif form_id==Config.sell_stock_form_id:
+            self.addForm(form_id, ui.SellStockForm)
+        elif form_id==Config.dividend_stock_form_id:
+            self.addForm(form_id, ui.DividendStockForm)
+        elif form_id==Config.buy_bond_form_id:
+            self.addForm(form_id, ui.BuyBondForm)
+        elif form_id==Config.sell_bond_form_id:
+            self.addForm(form_id, ui.SellBondForm)
+        elif form_id==Config.coupon_bond_form_id:
+            self.addForm(form_id, ui.CouponBondForm)
+        elif form_id==Config.currency_form_id:
+            self.addForm(form_id, ui.CurrencyForm)
+        elif form_id==Config.cash_form_id:
+            self.addForm(form_id, ui.CashForm)
+        elif form_id==Config.stock_report_id:
+            self.addForm(form_id, reports.ReportVisualization)
+        elif form_id==Config.temp_id:
+            self.addForm(form_id, reports.ValorizationVisualization)
 
 
 '''
@@ -64,7 +51,7 @@ MAIN FORM CLASS
 '''
 
 
-class MainForm(npyscreen.FormBaseNewWithMenus):
+class MainForm(FormBaseNewWithMenus):
 
     # MENU_KEY='Q'  #per cambiare la chiave di accesso per il menu
 
@@ -102,67 +89,67 @@ class MainForm(npyscreen.FormBaseNewWithMenus):
         values=report.to_records()
         index_name=list(report.index.names)
         columns_name=list(report.columns)
-        cleaned_matrix=stock_report_cleaned_matrix(values)
+        cleaned_matrix=misc.stock_report_cleaned_matrix(values)
 
         if not hasattr(self, 'grid'):
             # pylint: disable=W
-            self.grid = self.add(ReportGrid, col_titles=index_name+columns_name, values=cleaned_matrix, select_whole_line=True)
+            self.grid = self.add(misc.ReportGrid, col_titles=index_name+columns_name, values=cleaned_matrix, select_whole_line=True)
         else:
             self.grid.values=cleaned_matrix
             self.grid.display()
 
     def temp(self):
-        npyscreen.notify_confirm(self.parentApp.myRisparmi.bond_report.to_string())
+        notify_confirm(self.parentApp.myRisparmi.bond_report.to_string())
 
     def to_dividend_stock_form(self):
-        self.parentApp.form_creation(dividend_stock_form_id)
-        self.parentApp.setNextForm(dividend_stock_form_id)
+        self.parentApp.form_creation(Config.dividend_stock_form_id)
+        self.parentApp.setNextForm(Config.dividend_stock_form_id)
         self.parentApp.switchFormNow()
 
     def to_sell_stock_form(self):
-        self.parentApp.form_creation(sell_stock_form_id)
-        self.parentApp.setNextForm(sell_stock_form_id)
+        self.parentApp.form_creation(Config.sell_stock_form_id)
+        self.parentApp.setNextForm(Config.sell_stock_form_id)
         self.parentApp.switchFormNow()
 
     def to_buy_stock_form(self):
-        self.parentApp.form_creation(buy_stock_form_id)
-        self.parentApp.setNextForm(buy_stock_form_id)
+        self.parentApp.form_creation(Config.buy_stock_form_id)
+        self.parentApp.setNextForm(Config.buy_stock_form_id)
         self.parentApp.switchFormNow()
 
     def to_coupon_bond_form(self):
-        self.parentApp.form_creation(coupon_bond_form_id)
-        self.parentApp.setNextForm(coupon_bond_form_id)
+        self.parentApp.form_creation(Config.coupon_bond_form_id)
+        self.parentApp.setNextForm(Config.coupon_bond_form_id)
         self.parentApp.switchFormNow()
 
     def to_sell_bond_form(self):
-        self.parentApp.form_creation(sell_bond_form_id)
-        self.parentApp.setNextForm(sell_bond_form_id)
+        self.parentApp.form_creation(Config.sell_bond_form_id)
+        self.parentApp.setNextForm(Config.sell_bond_form_id)
         self.parentApp.switchFormNow()
 
     def to_buy_bond_form(self):
-        self.parentApp.form_creation(buy_bond_form_id)
-        self.parentApp.setNextForm(buy_bond_form_id)
+        self.parentApp.form_creation(Config.buy_bond_form_id)
+        self.parentApp.setNextForm(Config.buy_bond_form_id)
         self.parentApp.switchFormNow()
 
     def to_currency_form(self):
-        self.parentApp.form_creation(currency_form_id)
-        self.parentApp.setNextForm(currency_form_id)
+        self.parentApp.form_creation(Config.currency_form_id)
+        self.parentApp.setNextForm(Config.currency_form_id)
         self.parentApp.switchFormNow()
 
     def to_cash_form(self):
-        self.parentApp.form_creation(cash_form_id)
-        self.parentApp.setNextForm(cash_form_id)
+        self.parentApp.form_creation(Config.cash_form_id)
+        self.parentApp.setNextForm(Config.cash_form_id)
         self.parentApp.switchFormNow()
 
     def to_valorization(self):
-        self.parentApp.form_creation(temp_id)
-        self.parentApp.setNextForm(temp_id)
+        self.parentApp.form_creation(Config.temp_id)
+        self.parentApp.setNextForm(Config.temp_id)
         self.parentApp.switchFormNow()
 
     def to_stock_report(self):
         self.parentApp.myRisparmi.stock_report_gen()
-        self.parentApp.form_creation(stock_report_id)
-        self.parentApp.setNextForm(stock_report_id)
+        self.parentApp.form_creation(Config.stock_report_id)
+        self.parentApp.setNextForm(Config.stock_report_id)
         self.parentApp.switchFormNow()
 
     def update_internal_values(self):

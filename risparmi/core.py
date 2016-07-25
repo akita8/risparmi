@@ -5,7 +5,7 @@ Created on Fri Mar 25 15:33:17 2016
 @author: marco
 """
 
-import requests
+from requests.exceptions import ConnectionError
 import datetime as dt
 import numpy as np
 from pandas import DataFrame, Series, set_option
@@ -125,7 +125,7 @@ class Risparmi:
                     ['PE', 'short_ratio', 'time', 'change_pct'], axis=1)
 
                 self.updated_asset_values_save()
-            except requests.exceptions.ConnectionError:
+            except ConnectionError:
                 self.updated_stock_values=DataFrame().from_csv('stock_value.csv')
                 self.updated_currency_values=DataFrame().from_csv('currency_value.csv')
         else:
