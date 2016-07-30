@@ -1,3 +1,5 @@
+
+
 class Config:
 
     '''
@@ -19,14 +21,14 @@ class Config:
     tax_id = 'tasse'
     exchange_rate_id = 'cambio'
     owner_id = 'proprietario'
-    date_id = 'data' #per bond indica data valuta
-    type_id = 'tipologia' #per bond
-    price_issued_id = 'prezzo_emissione' #per bond
-    date_issued_id = 'data_emissione' #per bond
+    date_id = 'data'  # per bond indica data valuta
+    type_id = 'tipologia'  # per bond
+    price_issued_id = 'prezzo_emissione'  # per bond
+    date_issued_id = 'data_emissione'  # per bond
     date_refund_id = 'data_rimborso'
     transaction_id = 'transazione'  # serve per currency
-    description_id = 'descrizione'# serve per cash
-    amount_id ='importo'# serve per cash
+    description_id = 'descrizione'  # serve per cash
+    amount_id = 'importo'  # serve per cash
 
     '''
     LISTS OF WIDGET ID DECLARATION
@@ -54,13 +56,13 @@ class Config:
     FORM ID DECLARATION
     '''
 
-    buy_stock_form_id='buy_stock'
-    sell_stock_form_id='sell_stock'
-    dividend_stock_form_id='dividend'
-    buy_bond_form_id='buy_bond'
-    sell_bond_form_id='sell_bond'
-    coupon_bond_form_id='coupon'
-    currency_form_id='currency'
-    cash_form_id='cash'
-    stock_report_id='stock_report'
-    temp_id='temp' #temporanea per la valorizzazione, devo farlo meglio!
+    buy_stock_form_id = 'buy_stock'
+    sell_stock_form_id = 'sell_stock'
+    dividend_stock_form_id = 'dividend'
+    buy_bond_form_id = 'buy_bond'
+    sell_bond_form_id = 'sell_bond'
+    coupon_bond_form_id = 'coupon'
+    currency_form_id = 'currency'
+    cash_form_id = 'cash'
+    stock_report_id = 'stock_report'
+    temp_id = 'temp'  # temporanea per la valorizzazione, devo farlo meglio!

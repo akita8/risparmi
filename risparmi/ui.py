@@ -1,7 +1,7 @@
 import npyscreen
-from misc import NoInputException, is_number
-from popups import NotInChoicesPopup, AutocompletePopup
-from config import Config
+from risparmi.misc import NoInputException, is_number
+from risparmi.popups import NotInChoicesPopup, AutocompletePopup
+from risparmi.config import Config
 
 
 
@@ -122,10 +122,10 @@ class BaseInputForm(npyscreen.FormMultiPageActionWithMenus):
                                     max_width=50, max_height=len(values)+1, values=values)
         self.nextrely+=2
 
-    def add_multiple_values_widget_external(self, _id, description, value_type, asset_type):
+    def add_multiple_values_widget_external(self, _id, description, asset_type):
 
         data = self.parentApp.myRisparmi.get_asset_values_list(
-            asset_type, value_type)
+            asset_type, _id)
 
         data.append('altro...')
 
@@ -153,7 +153,7 @@ class BaseInputForm(npyscreen.FormMultiPageActionWithMenus):
                         values[_id]=float(values[_id])
 
                 self.parentApp.myRisparmi.add_asset_transaction(
-                    values, asset_type)
+                    values, asset_type) #da cambiareeee
                 self.parentApp.setNextForm('MAIN')
                 self.parentApp.removeForm(self.parentApp.active_form_id)
             else:
@@ -191,22 +191,22 @@ class BuyStockForm(BaseInputForm):
         self.add_single_value_widget(Config.isin_id, "Inserisci il ISIN dell'azione:")
 
         self.add_multiple_values_widget_external(Config.account_id, 'Scegli il conto in cui si è effetuata la transazione:',
-                                                'conto', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.owner_id, 'Scegli il proprietario del conto:',
-                                                'proprietario', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.market_id, 'Scegli il mercato di appartenenza:',
-                                                'mercato', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.sector_id, 'Scegli il settore di appartenenza:',
-                                                'settore', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.currency_id, "Scegli la valuta dell'azione:",
-                                                'valuta', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.nation_id, 'Scegli la nazione di appartenenza:',
-                                                'nazione', self.asset_type)
+                                                 self.asset_type)
 
         self.add_single_value_widget(Config.price_id, 'Inserisci il prezzo di acquisto:')
 
@@ -244,22 +244,22 @@ class SellStockForm(BaseInputForm):
         self.add_single_value_widget(Config.isin_id, "Inserisci il ISIN dell'azione:")
 
         self.add_multiple_values_widget_external(Config.account_id, 'Scegli il conto in cui si è effetuata la transazione:',
-                                                'conto', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.owner_id, 'Scegli il proprietario del conto:',
-                                                'proprietario', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.market_id, 'Scegli il mercato di appartenenza:',
-                                                'mercato', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.sector_id, 'Scegli il settore di appartenenza:',
-                                                'settore', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.currency_id, "Scegli la valuta dell'azione:",
-                                                'valuta', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.nation_id, 'Scegli la nazione di appartenenza:',
-                                                'nazione', self.asset_type)
+                                                 self.asset_type)
 
         self.add_single_value_widget(Config.price_id, 'Inserisci il prezzo di vendita:')
 
@@ -298,22 +298,22 @@ class DividendStockForm(BaseInputForm):
         self.add_single_value_widget(Config.isin_id, "Inserisci il ISIN dell'azione:")
 
         self.add_multiple_values_widget_external(Config.account_id, 'Scegli il conto in cui si è effetuata la transazione:',
-                                                'conto', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.owner_id, 'Scegli il proprietario del conto:',
-                                                'proprietario', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.market_id, 'Scegli il mercato di appartenenza:',
-                                                'mercato', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.sector_id, 'Scegli il settore di appartenenza:',
-                                                'settore', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.currency_id, "Scegli la valuta dell'azione:",
-                                                'valuta', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.nation_id, 'Scegli la nazione di appartenenza:',
-                                                'nazione', self.asset_type)
+                                                 self.asset_type)
 
         self.add_single_value_widget(Config.dividend_coupon_id, "Inserisci l'ammontare lordo del dividendo:")
 
@@ -350,20 +350,21 @@ class BuyBondForm(BaseInputForm):
         self.add_single_value_widget(Config.isin_id, "Inserisci il ISIN dell'obbligazione:")
 
         self.add_multiple_values_widget(Config.type_id, 'Scegli il tipo', ['annuale', 'semestrale'])
+        
         self.add_multiple_values_widget_external(Config.account_id, 'Scegli il conto in cui si è effetuata la transazione:',
-                                                'conto', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.owner_id, 'Scegli il proprietario del conto:',
-                                                'proprietario', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.market_id, 'Scegli il mercato di appartenenza:',
-                                                'mercato', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.currency_id, "Scegli la valuta dell'obbligazione:",
-                                                'valuta', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.nation_id, 'Scegli la nazione di appartenenza:',
-                                                'nazione', self.asset_type)
+                                                 self.asset_type)
 
         self.add_single_value_widget(Config.price_id, 'Inserisci il prezzo di acquisto:')
 
@@ -409,19 +410,19 @@ class SellBondForm(BaseInputForm):
 
         self.add_multiple_values_widget(Config.type_id, 'Scegli il tipo', ['annuale', 'semestrale'])
         self.add_multiple_values_widget_external(Config.account_id, 'Scegli il conto in cui si è effetuata la transazione:',
-                                                'conto', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.owner_id, 'Scegli il proprietario del conto:',
-                                                'proprietario', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.market_id, 'Scegli il mercato di appartenenza:',
-                                                'mercato', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.currency_id, "Scegli la valuta dell'obbligazione:",
-                                                'valuta', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.nation_id, 'Scegli la nazione di appartenenza:',
-                                                'nazione', self.asset_type)
+                                                 self.asset_type)
 
         self.add_single_value_widget(Config.price_id, 'Inserisci il prezzo di vendita:')
 
@@ -461,19 +462,19 @@ class CouponBondForm(BaseInputForm):
 
         self.add_multiple_values_widget(Config.type_id, 'Scegli il tipo', ['annuale', 'semestrale'])
         self.add_multiple_values_widget_external(Config.account_id, 'Scegli il conto in cui si è effetuata la transazione:',
-                                                'conto', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.owner_id, 'Scegli il proprietario del conto:',
-                                                'proprietario', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.market_id, 'Scegli il mercato di appartenenza:',
-                                                'mercato', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.currency_id, "Scegli la valuta dell'obbligazione:",
-                                                'valuta', self.asset_type)
+                                                 self.asset_type)
 
         self.add_multiple_values_widget_external(Config.nation_id, 'Scegli la nazione di appartenenza:',
-                                                'nazione', self.asset_type)
+                                                 self.asset_type)
 
         self.add_single_value_widget(Config.price_id, "Inserisci l'importo della cedola:")
 

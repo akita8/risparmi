@@ -26,7 +26,7 @@ class Risparmi:
             # e il contenuto di asset(template)
             copytree('assets(template)', directory)
 
-        self.date=dt.datetime.today().strftime("%d/%m/%y")
+        self.date = dt.datetime.today().strftime("%d/%m/%y")
 
         self.directory = directory
         self.assets = {'stock': DataFrame(), 'bond': DataFrame(), 'currency': DataFrame(),
@@ -53,12 +53,12 @@ class Risparmi:
     def get_asset_preloded(self, symbol):
         asset_types = ['stock', 'bond', 'currency']
         for asset_type in asset_types:
-            preloaded=self.assets[asset_type][self.assets[asset_type].simbolo == symbol]
+            preloaded = self.assets[asset_type][
+                self.assets[asset_type].simbolo == symbol]
             if not preloaded.empty:
                 return preloaded.head(1).to_dict(orient='list')
 
     def get_complete_symbol_list(self):
-
 
         asset_types = ['stock', 'bond', 'currency']
         complete_list = []
@@ -68,11 +68,11 @@ class Risparmi:
 
     def get_inizialized_values(self, asset_type, external=True, asset=None):
 
-        with open(self.directory+ '/' +asset_type+'.csv', 'r') as f:
-            header=f.readline().strip('\n')
-        header_list=header[1:].split(',')
+        with open(self.directory + '/' + asset_type + '.csv', 'r') as f:
+            header = f.readline().strip('\n')
+        header_list = header[1:].split(',')
         if external:
-            return {header:'' for header in header_list}
+            return {header: '' for header in header_list}
         else:
             return dict(zip(header_list, asset))
 
@@ -96,20 +96,23 @@ class Risparmi:
 
     def add_asset_transaction(self, transaction_values_dict, asset_type):
 
-        self.assets[asset_type].loc[len(self.assets[asset_type].index)] = transaction_values_dict
+        self.assets[asset_type].loc[
+            len(self.assets[asset_type].index)] = transaction_values_dict
 
     def updated_assets_values_gen(self, forced=False):
         '''Crea un dataframe dei valori attuali di stock e currency dal sito Yahoo Finance'''
 
-        last_download=dt.datetime.fromtimestamp(stat('stock_value.csv').st_mtime).strftime("%d/%m/%y")
+        last_download = dt.datetime.fromtimestamp(
+            stat('stock_value.csv').st_mtime).strftime("%d/%m/%y")
 
-        if last_download!=self.date or forced:
+        if last_download != self.date or forced:
             try:
-            # stocks
+                # stocks
                 self.updated_stock_values = DataFrame()
                 for symbol in list(set(self.assets['stock']['simbolo'])):
                     temp = data.get_quote_yahoo(symbol)
-                    self.updated_stock_values = self.updated_stock_values.append(temp)
+                    self.updated_stock_values = self.updated_stock_values.append(
+                        temp)
                 self.updated_stock_values.index.name = 'simbolo'
                 self.updated_stock_values = self.updated_stock_values.drop(
                     ['PE', 'short_ratio', 'time', 'change_pct'], axis=1)
@@ -126,12 +129,11 @@ class Risparmi:
 
                 self.updated_asset_values_save()
             except ConnectionError:
-                self.updated_stock_values=DataFrame().from_csv('stock_value.csv')
-                self.updated_currency_values=DataFrame().from_csv('currency_value.csv')
+                self.updated_stock_values = DataFrame().from_csv('stock_value.csv')
+                self.updated_currency_values = DataFrame().from_csv('currency_value.csv')
         else:
-            self.updated_stock_values=DataFrame().from_csv('stock_value.csv')
-            self.updated_currency_values=DataFrame().from_csv('currency_value.csv')
-
+            self.updated_stock_values = DataFrame().from_csv('stock_value.csv')
+            self.updated_currency_values = DataFrame().from_csv('currency_value.csv')
 
     def stock_report_gen(self):
 
@@ -167,7 +169,6 @@ class Risparmi:
                 report.append(np.nan)
 
             elif asset[7] == 'vendita':
-
                 gross_price = asset[11] * asset[10]
                 tax = gross_price * asset[14]
                 commission = asset[13]
@@ -214,7 +215,7 @@ class Risparmi:
                 # asset.name è la variabile per accedere all indice/i della
                 # riga e gli indici dipendono dal groupby in fondo
                 price = asset[0] / 100.0
-
+            #print (str(price)+''+str(asset[1])+''+str(type(price))+''+str(type(asset[1])))
             flash = price * asset[1]
 
             # questa funzione serve a calcolare la valorizzazione dei conti, è
@@ -228,7 +229,6 @@ class Risparmi:
                 status += asset[3]
             if np.isnan(asset[4]) == False:  # questo aggiunge  i dividendi a status
                 status += asset[4]
-
 
             report = [asset[2], asset[3], asset[4], price, flash, status]
             index = ['investito', 'venduto', 'dividendi',
@@ -248,106 +248,109 @@ class Risparmi:
 
         self.stock_report = joined_stock.apply(stock_report_func, axis=1)
 
-        self.active_stock_report=self.stock_report.query('flash!=0.0')
+        self.active_stock_report = self.stock_report.query('flash!=0.0')
 
     def bond_report_gen(self):
 
         def bond_agg_func(*args):
 
-            asset=self.get_inizialized_values('bond', external=False, asset=args[0])
+            asset = self.get_inizialized_values(
+                'bond', external=False, asset=args[0])
             #print (asset)
 
-            coupon=asset['cedola-dividendo']
-            #gestisco le date
-            date_formating=lambda y: (list(map((lambda x: int(x)), y.split('-'))))
+            coupon = asset['cedola-dividendo']
+            # gestisco le date
+            date_formating = lambda y: (
+                list(map((lambda x: int(x)), y.split('-'))))
 
-            issue_date=dt.date(*date_formating(asset['data_emissione']))
-            refund_date=dt.date(*date_formating(asset['data_rimborso']))
-            transfer_date=dt.date(*date_formating(asset['data'])) #data valuta
+            issue_date = dt.date(*date_formating(asset['data_emissione']))
+            refund_date = dt.date(*date_formating(asset['data_rimborso']))
+            transfer_date = dt.date(
+                *date_formating(asset['data']))  # data valuta
 
+            first_coupon_date = dt.date(
+                transfer_date.year, issue_date.month, issue_date.day)
+            # print(first_coupon_date)
+            if first_coupon_date > transfer_date:
+                first_coupon_date = dt.date(
+                    first_coupon_date.year - 1, issue_date.month, issue_date.day)
 
-            first_coupon_date=dt.date(transfer_date.year, issue_date.month, issue_date.day)
-            #print(first_coupon_date)
-            if first_coupon_date>transfer_date:
-                first_coupon_date=dt.date(first_coupon_date.year-1, issue_date.month, issue_date.day)
+            if asset['tipologia'] == 'annuale':
 
-
-            if asset['tipologia']=='annuale':
-
-                days_to_coupon=(transfer_date-first_coupon_date).days
-                first_next_coupon=dt.date(first_coupon_date.year+1, first_coupon_date.month, first_coupon_date.day)
-                days_between_coupon=(first_next_coupon-first_coupon_date).days
-                #print(days_to_coupon)
-                #print(days_between_coupon)
+                days_to_coupon = (transfer_date - first_coupon_date).days
+                first_next_coupon = dt.date(
+                    first_coupon_date.year + 1, first_coupon_date.month, first_coupon_date.day)
+                days_between_coupon = (
+                    first_next_coupon - first_coupon_date).days
+                # print(days_to_coupon)
+                # print(days_between_coupon)
             else:
 
-                month_second_coupon=first_coupon_date.month+6
-                year_second_coupon=first_coupon_date.year
-                if month_second_coupon>12:
-                    month_second_coupon-=12
-                    year_second_coupon+=1
-                second_coupon_date=dt.date(year_second_coupon, month_second_coupon, first_coupon_date.day)
+                month_second_coupon = first_coupon_date.month + 6
+                year_second_coupon = first_coupon_date.year
+                if month_second_coupon > 12:
+                    month_second_coupon -= 12
+                    year_second_coupon += 1
+                second_coupon_date = dt.date(
+                    year_second_coupon, month_second_coupon, first_coupon_date.day)
                 #print([first_coupon_date, second_coupon_date])
-                if second_coupon_date>transfer_date:
-                    days_to_coupon=(transfer_date-first_coupon_date).days
+                if second_coupon_date > transfer_date:
+                    days_to_coupon = (transfer_date - first_coupon_date).days
                 else:
-                    days_to_coupon=(transfer_date-second_coupon_date).days
-                #print(days_to_coupon)
-                if transfer_date>second_coupon_date :
-                    first_next_coupon=dt.date(first_coupon_date.year+1, first_coupon_date.month, first_coupon_date.day)
-                    days_between_coupon=(first_next_coupon-second_coupon_date).days
+                    days_to_coupon = (transfer_date - second_coupon_date).days
+                # print(days_to_coupon)
+                if transfer_date > second_coupon_date:
+                    first_next_coupon = dt.date(
+                        first_coupon_date.year + 1, first_coupon_date.month, first_coupon_date.day)
+                    days_between_coupon = (
+                        first_next_coupon - second_coupon_date).days
 
                 else:
-                    days_between_coupon=(second_coupon_date-first_coupon_date).days
+                    days_between_coupon = (
+                        second_coupon_date - first_coupon_date).days
 
-                #print(days_between_coupon)
-                coupon/=2
+                # print(days_between_coupon)
+                coupon /= 2
 
-            days_from_issue_date=(transfer_date-issue_date).days
-            bond_life=(refund_date-issue_date).days
-            #print(days_from_issue_date)
-            #print(bond_life)
+            days_from_issue_date = (transfer_date - issue_date).days
+            bond_life = (refund_date - issue_date).days
+            # print(days_from_issue_date)
+            # print(bond_life)
 
-            price_r=100.0
-            price_i=asset['prezzo_emissione']
-            price_t=asset['prezzo_acquisto-vendita']
-            quantity=asset['quantità']
-            commission=asset['commissione']
-            tax=asset['tasse']
+            price_r = 100.0
+            price_i = asset['prezzo_emissione']
+            price_t = asset['prezzo_acquisto-vendita']
+            quantity = asset['quantità']
+            commission = asset['commissione']
+            tax = asset['tasse']
 
 # acquisto puro
-            x=quantity*(price_t/100)
+            x = quantity * (price_t / 100)
 # rateo maturato all acquisto
-            y=((coupon*days_to_coupon)/days_between_coupon)*quantity
+            y = ((coupon * days_to_coupon) / days_between_coupon) * quantity
 # ritenuta sul rateo all acquisto
-            z=y*tax
+            z = y * tax
 # disaggio di emissione maturato
-            k=(((price_r-price_i)*days_from_issue_date)/bond_life)*(quantity/100)
+            k = (((price_r - price_i) * days_from_issue_date) /
+                 bond_life) * (quantity / 100)
 # ritenuta sul disaggio
-            h=k*tax
+            h = k * tax
 # formula investimento(gestire il disaggio negativo)
-            price_purchase=x+y-z-h+commission
+            price_purchase = x + y - z - h + commission
 
             #print('{0} {1} {2} {3} {4}'.format(x, y, z, k, price_purchase))
-            return Series({'conto':asset['conto'], 'simbolo':asset['simbolo'], 'prezzo':price_purchase})
+            return Series({'conto': asset['conto'], 'simbolo': asset['simbolo'], 'prezzo': price_purchase})
 
+        self.bond_report = self.assets['bond'].apply(
+            bond_agg_func, axis=1).groupby(['conto', 'simbolo']).sum()
 
-
-
-        self.bond_report=self.assets['bond'].apply(bond_agg_func, axis=1).groupby(['conto', 'simbolo']).sum()
-
-
-
-
-    def get_exchange_rate(self): #temporanea
+    def get_exchange_rate(self):  # temporanea
 
         usd = self.updated_currency_values.at['eurusd=x', 'last']
         gbp = self.updated_currency_values.at['eurgbp=x', 'last']  # cambi
         chf = self.updated_currency_values.at['eurchf=x', 'last']
 
-        return {'Dollari':usd, 'Sterline':gbp, 'Franchi Svizzeri':chf}
-
-
+        return {'Dollari': usd, 'Sterline': gbp, 'Franchi Svizzeri': chf}
 
     def get_single_stock_report(self, selection):
 

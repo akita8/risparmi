@@ -23,6 +23,19 @@ class SqlIO:
         Base.metadata.bind = self.engine
         Base.metadata.create_all(self.engine)
 
+    def add_asset_transaction(self, diz, asset_type):
+
+        if asset_type=='stock':
+            asset=Stock(**diz)
+        elif asset_type=='bond':
+            asset=Bond(**diz)
+        elif asset_type=='currency':
+            asset=Stock(**diz)
+        elif asset_type=='cash':
+            asset=Stock(**diz)
+
+        self.session.add(asset)
+        self.session.commit()
 
 # temporaneo
     def import_stock_csv(self):
