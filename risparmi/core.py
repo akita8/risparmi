@@ -4,7 +4,7 @@ Created on Fri Mar 25 15:33:17 2016
 
 @author: marco
 """
-#test
+
 from requests.exceptions import ConnectionError
 import datetime as dt
 import numpy as np
